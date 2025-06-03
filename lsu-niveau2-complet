@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gestion d'Élèves</title>
+  <style>
+    /* Variables de thème */
+    :root {
+      --primary: #6366f1;
+      --secondary: #ec4899;
+      --bg: #f8fafc;
+      --text: #1e293b;
+      --card: #fff;
+      --border: #e2e8f0;
+      --glass: rgba(255,255,255,0.7);
+    }
+    body {
+      margin:0; padding:0;
+      font-family:sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      display:grid; grid-template-rows:auto 1fr; height:100vh;
+    }
+    header {
+      background:var(--primary);
+      color:#fff; padding:1rem;
+      text-align:center; font-size:1.4rem;
+    }
+    .layout {
+      display:grid;
+      grid-template-columns:300px 1fr;
+    }
+    /* Sidebar */
+    .sidebar {
+      background:var(--card);
+      border-right:1px solid var(--border);
+      display:flex; flex-direction:column;
+      padding:1rem;
+      overflow:hidden;
+    }
+    .sb-top {
+      display:flex; gap:.5rem; margin-bottom:1rem;
+    }
+    .sb-top button {
+      flex:1; padding:.5rem; border:none;
+      background:var(--primary); color:#fff;
+      cursor:pointer;
+    }
+    .sb-search {
+      position:relative; margin-bottom:1rem;
+    }
+    .sb-search input {
+      width:100%; padding:.5rem 2.5rem .5rem .5rem;
+      border:1px solid var(--border); border-radius:4px;
+    }
+    .sb-search span {
+      position:absolute; right:.5rem; top:50%;
+      transform:translateY(-50%); font-size:1.2rem;
+      color:var(--border);
+    }
+    .students-list {
+      overflow-y:auto; flex:1;
+    }
+    .student-card {
+      background:var(--glass);
+      border:1px solid var(--border);
+      border-radius:6px; padding:.5rem;
+      margin-bottom:.5rem; cursor:pointer;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .student-card.active { border-color:var(--primary); }
+    .student-card .actions button {
+      background:none; border:none; cursor:pointer; font-size:1rem;
+      margin-left:.3rem;
+    }
+    /* Main */
+    .main {
+      padding:1rem; overflow-y:auto;
+    }
+    .main-placeholder {
+      text-align:center; margin-top:3rem; color:var(--border);
+    }
+    form {
+      display:grid; gap:1rem; max-width:400px;
+    }
+    form label { display:block; font-weight:600; }
+    form input, form select, form textarea {
+      width:100%; padding:.5rem; border:1px solid var(--border);
+      border-radius:4px;
+    }
+    form .buttons {
+      display:flex; gap:.5rem;
+    }
+    form .buttons button {
+      flex:1; padding:.5rem; border:none; cursor:pointer;
+    }
+    form .buttons .save { background:var(--primary); color:#fff; }
+    form .buttons .cancel { background:var(--border); }
+    /* Modal */
+    .modal-bg {
+      position:fixed; top:0; left:0; width:100%; height:100%;
+      background:rgba(0,0,0,0.4); display:none;
+      align-items:center; justify-content:center;
+    }
+    .modal {
+      background:var(--card); padding:1rem;
+      border-radius:6px; width:90%; max-width:400px;
+    }
+    .modal.show { display:flex; }
+  </style>
+</head>
+<body>
+
+  <header>Gestion d'Élèves</header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sb-top">
+        <button id="btn-add">+ Ajouter</button>
+        <button id="btn-import">⇪ Import</button>
+        <button id="btn-export">⇩ Export</button>
+      </div>
+      <div class="sb-search">
+        <input id="search" placeholder="Rechercher…">
+        <span>🔍</span>
+      </div>
+      <div class="students-list" id="students-list">
+        <!-- Cartes d'élèves -->
+      </div>
+    </aside>
+    <main class="main" id="main-content">
+      <div class="main-placeholder">Sélectionnez un élève ou ajoutez-en un nouveau</div>
+    </main>
+  </div>
+
+  <!-- Modal ajout/édition -->
+  <div class="modal-bg" id="modal-bg">
+    <div class="modal">
+      <h3 id="modal-title">Ajouter un élève</h3>
+      <form id="student-form">
+        <input type="hidden" id="student-id">
+        <label>Nom complet*</label>
+        <input type="text" id="student-name" required>
+        <label>Niveau*</label>
+        <select id="student-level" required>
+          <option value="">--Choisir--</option>
+          <option>CP</option><option>CE1</option><option>CE2</option>
+          <option>CM1</option><option>CM2</option><option>6ème</option>
+          <option>5ème</option><option>4ème</option><option>3ème</option>
+        </select>
+        <label>Classe</label>
+        <input type="text" id="student-class">
+        <label>Notes</label>
+        <textarea id="student-notes" rows="3"></textarea>
+        <div class="buttons">
+          <button type="button" class="cancel" id="btn-cancel">Annuler</button>
+          <button type="submit" class="save">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <input type="file" id="import-file" accept=".json" style="display:none">
+
+  <script>
+  // — States & Utils —
+  const KEY = 'gestion-eleves-db';
+  let db = JSON.parse(localStorage.getItem(KEY) || '[]');
+  let filtered = db.slice();
+  let selectedId = null;
+
+  function saveDB() {
+    localStorage.setItem(KEY, JSON.stringify(db));
+  }
+  function uuid() {
+    return Date.now().toString(16) + Math.random().toString(16).slice(2);
+  }
+  function showModal(edit=false) {
+    document.getElementById('modal-bg').classList.add('show');
+    document.getElementById('modal-title').textContent = edit ? 'Modifier l\'élève' : 'Ajouter un élève';
+  }
+  function hideModal() {
+    document.getElementById('modal-bg').classList.remove('show');
+    document.getElementById('student-form').reset();
+    document.getElementById('student-id').value = '';
+  }
+  function renderList() {
+    const container = document.getElementById('students-list');
+    container.innerHTML = '';
+    filtered.forEach(s => {
+      const div = document.createElement('div');
+      div.className = 'student-card' + (s.id===selectedId?' active':'');
+      div.innerHTML = `
+        <span>${s.name} (${s.level})</span>
+        <span class="actions">
+          <button class="edit" data-id="${s.id}">✏️</button>
+          <button class="del"  data-id="${s.id}">🗑️</button>
+        </span>`;
+      div.querySelector('.edit').onclick = e => openEdit(e.target.dataset.id);
+      div.querySelector('.del').onclick = e => deleteStudent(e.target.dataset.id);
+      div.onclick = () => selectStudent(s.id);
+      container.appendChild(div);
+    });
+  }
+  function selectStudent(id) {
+    selectedId = id;
+    const s = db.find(x=>x.id===id);
+    const main = document.getElementById('main-content');
+    main.innerHTML = `
+      <h2>${s.name}</h2>
+      <p><strong>Niveau :</strong> ${s.level}</p>
+      <p><strong>Classe :</strong> ${s.class||'–'}</p>
+      <p><strong>Notes :</strong><br>${s.notes||'–'}</p>
+    `;
+    renderList();
+  }
+  function addStudent(data) {
+    db.push(data); saveDB(); applyFilter(); selectStudent(data.id);
+  }
+  function updateStudent(data) {
+    const i = db.findIndex(x=>x.id===data.id);
+    db[i] = data; saveDB(); applyFilter(); selectStudent(data.id);
+  }
+  function deleteStudent(id) {
+    if (!confirm('Confirmer la suppression ?')) return;
+    db = db.filter(x=>x.id!==id);
+    saveDB();
+    filtered = filtered.filter(x=>x.id!==id);
+    if (selectedId===id) selectedId = null;
+    document.getElementById('main-content').innerHTML = '<div class="main-placeholder">Sélectionnez un élève ou ajoutez-en un nouveau</div>';
+    renderList();
+  }
+  function openEdit(id) {
+    const s = db.find(x=>x.id===id);
+    document.getElementById('student-id').value   = s.id;
+    document.getElementById('student-name').value = s.name;
+    document.getElementById('student-level').value= s.level;
+    document.getElementById('student-class').value= s.class;
+    document.getElementById('student-notes').value= s.notes;
+    showModal(true);
+  }
+  function applyFilter() {
+    const q = document.getElementById('search').value.toLowerCase();
+    filtered = db.filter(s=>s.name.toLowerCase().includes(q));
+    renderList();
+  }
+  function exportJSON() {
+    const blob = new Blob([JSON.stringify({ exportDate: new Date().toISOString(), students: db },null,2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `eleves-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+  }
+  function importJSON(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const obj = JSON.parse(e.target.result);
+        if (!Array.isArray(obj.students)) throw '';
+        // on ignore les doublons
+        obj.students.forEach(s => {
+          if (!db.some(x=>x.id===s.id)) db.push(s);
+        });
+        saveDB(); applyFilter();
+        alert(`Importé : ${obj.students.length} élèves`);
+      } catch {
+        alert('Format invalide');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  // — Listeners —
+  document.getElementById('btn-add').onclick = ()=>showModal(false);
+  document.getElementById('btn-cancel').onclick = hideModal;
+  document.getElementById('student-form').onsubmit = e=>{
+    e.preventDefault();
+    const id    = document.getElementById('student-id').value || uuid();
+    const name  = document.getElementById('student-name').value.trim();
+    const level = document.getElementById('student-level').value;
+    const cls   = document.getElementById('student-class').value.trim();
+    const notes = document.getElementById('student-notes').value.trim();
+    const data = { id, name, level, class:cls, notes };
+    if (document.getElementById('student-id').value) updateStudent(data);
+    else addStudent(data);
+    hideModal();
+  };
+  document.getElementById('search').oninput = applyFilter;
+  document.getElementById('btn-export').onclick = exportJSON;
+  document.getElementById('btn-import').onclick = ()=>document.getElementById('import-file').click();
+  document.getElementById('import-file').onchange = e=>importJSON(e.target.files[0]);
+
+  // — Init —
+  applyFilter();
+  </script>
+
+</body>
+</html>
