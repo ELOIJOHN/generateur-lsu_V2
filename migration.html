@@ -1,0 +1,237 @@
+# 🎯 WORKFLOW CURSOR - MIGRATION LSU
+
+## 📁 STRUCTURE RECOMMANDÉE DANS CURSOR
+
+```
+votre-dossier-lsu/
+├── 📄 index.html              # Votre générateur actuel
+├── 📄 style.css               # Vos styles actuels  
+├── 📄 script.js               # Votre logique actuelle
+├── 📄 migration.html          # ⭐ NOUVEAU - Script de migration
+└── 📁 lsu-v2/                 # ⭐ NOUVEAU - Nouvelle version
+    ├── 📄 index.html          # Générateur v2.0
+    ├── 📄 dashboard.html      # Dashboard
+    ├── 📄 students.html       # Gestion élèves
+    ├── 📁 css/
+    ├── 📁 js/
+    └── 📁 data/
+```
+
+## 🔧 COMMANDES CURSOR UTILES
+
+### Extensions recommandées :
+```json
+{
+  "recommendations": [
+    "ritwickdey.liveserver",      // Live Server pour tests
+    "esbenp.prettier-vscode",     // Formatage code
+    "bradlc.vscode-tailwindcss",  // Si vous utilisez Tailwind
+    "formulahendry.auto-rename-tag" // Rename HTML tags
+  ]
+}
+```
+
+### Raccourcis Cursor pour ce projet :
+- `Ctrl+Shift+P` : Palette de commandes
+- `Ctrl+`` : Terminal intégré
+- `Ctrl+Shift+E` : Explorateur de fichiers
+- `Ctrl+D` : Sélection multiple
+- `Alt+Shift+F` : Formatage automatique
+
+## 🚀 ÉTAPES DE MIGRATION DANS CURSOR
+
+### ÉTAPE 1 : Préparation
+```bash
+# 1. Ouvrez votre projet actuel
+File > Open Folder > [votre-dossier-lsu]
+
+# 2. Créez le dossier pour la v2
+Clic droit dans l'explorateur > New Folder > "lsu-v2"
+
+# 3. Créez migration.html
+Clic droit > New File > "migration.html"
+```
+
+### ÉTAPE 2 : Installation du script
+1. **Copiez le script de migration complet** dans `migration.html`
+2. **Sauvegardez** avec `Ctrl+S`
+3. **Lancez Live Server** : 
+   - Clic droit sur `migration.html`
+   - "Open with Live Server"
+   - OU `Ctrl+Shift+P` > "Live Server: Open"
+
+### ÉTAPE 3 : Exécution de la migration
+1. **Suivez les 5 étapes** dans le navigateur
+2. **Surveillez la console Cursor** pour les erreurs éventuelles
+3. **Gardez Cursor ouvert** pendant la migration
+
+### ÉTAPE 4 : Création de la v2
+```bash
+# Une fois la migration terminée, dans Cursor :
+# Créez la nouvelle structure dans lsu-v2/
+
+# Utilisez le prompt que j'ai donné précédemment :
+# Ctrl+Shift+P > "Chat: New Chat"
+# Collez le prompt complet pour créer tous les fichiers
+```
+
+## 💡 TIPS CURSOR SPÉCIFIQUES
+
+### 1. Utilisation de l'IA Cursor
+```markdown
+# Dans le chat Cursor, utilisez :
+"Create the complete index.html file for LSU v2.0 based on migrated data structure"
+
+"Generate the CSS file with modern design system for educational app"
+
+"Create JavaScript modules for student management with localStorage"
+```
+
+### 2. Multi-cursors pour édition rapide
+- `Ctrl+D` : Sélectionner l'occurrence suivante
+- `Ctrl+Shift+L` : Sélectionner toutes les occurrences
+- `Alt+Click` : Ajouter un curseur
+
+### 3. Snippets personnalisés
+```json
+// Dans settings.json de Cursor
+{
+  "html.customData": [
+    {
+      "tags": [
+        {
+          "name": "lsu-card",
+          "description": "Student card component"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 4. Formatage automatique
+```json
+// .prettierrc dans votre projet
+{
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": true,
+  "htmlWhitespaceSensitivity": "ignore"
+}
+```
+
+## 🔍 DÉBOGAGE AVEC CURSOR
+
+### Console intégrée :
+```bash
+# Terminal dans Cursor (Ctrl+`)
+# Pour tester Ollama :
+curl http://localhost:11434/api/tags
+
+# Pour voir la taille des données :
+du -sh *
+```
+
+### DevTools integration :
+1. **F12** dans le navigateur avec Live Server
+2. **Console** pour voir les logs de migration
+3. **Application > LocalStorage** pour vérifier les données
+
+## 📊 MONITORING DE LA MIGRATION
+
+### Fichiers à surveiller dans Cursor :
+```javascript
+// Dans la console navigateur, vérifiez :
+console.log('Données avant:', localStorage.getItem('lsu-students'));
+console.log('Données après:', localStorage.getItem('lsu-students'));
+
+// Dans Cursor, surveillez les erreurs dans :
+// - Terminal intégré
+// - Problems panel (Ctrl+Shift+M)
+```
+
+## 🔧 CONFIGURATION CURSOR OPTIMALE
+
+### settings.json recommandé :
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "html.format.wrapLineLength": 120,
+  "javascript.preferences.quoteStyle": "single",
+  "css.validate": true,
+  "liveServer.settings.donotShowInfoMsg": true
+}
+```
+
+### tasks.json pour automatisation :
+```json
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start LSU Development",
+      "type": "shell",
+      "command": "echo",
+      "args": ["Starting LSU development environment..."],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always"
+      }
+    }
+  ]
+}
+```
+
+## 🎯 CHECKLIST CURSOR
+
+### Avant migration :
+- [ ] Projet LSU ouvert dans Cursor
+- [ ] Extension Live Server installée
+- [ ] Git initialisé (optionnel mais recommandé)
+- [ ] Terminal accessible (`Ctrl+`` )
+
+### Pendant migration :
+- [ ] migration.html créé et lancé
+- [ ] Console navigateur ouverte (F12)
+- [ ] Cursor ouvert pour surveiller
+- [ ] Données sauvegardées automatiquement
+
+### Après migration :
+- [ ] Dossier lsu-v2/ créé
+- [ ] Nouveaux fichiers générés via IA Cursor
+- [ ] Tests fonctionnels dans Live Server
+- [ ] Commit Git des changements
+
+## 🚀 COMMANDES RAPIDES
+
+```bash
+# Dans le terminal Cursor :
+# Initialiser Git (optionnel)
+git init
+git add .
+git commit -m "Initial LSU v1.0 before migration"
+
+# Après migration réussie :
+git add .
+git commit -m "LSU v2.0 migration completed"
+
+# Créer une branche pour la v2
+git checkout -b lsu-v2
+```
+
+---
+
+## 🎯 PROCHAINES ÉTAPES DANS CURSOR
+
+1. **Lancez migration.html** avec Live Server
+2. **Complétez les 5 étapes** de migration
+3. **Utilisez l'IA Cursor** pour générer les nouveaux fichiers
+4. **Testez** la nouvelle version
+5. **Committez** vos changements
+
+**Besoin d'aide avec Cursor ? Dites-moi où vous en êtes !** 🚀

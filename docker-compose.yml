@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  proxy:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+    networks:
+      - app-network
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - app-network
+
+volumes:
+  ollama_data:
+
+networks:
+  app-network:
+    driver: bridge 

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Élèves - LSU v2.0</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span>👥</span>
+                <span>Générateur LSU</span>
+            </div>
+            
+            <nav class="nav">
+                <a href="index.html" class="nav-link" data-page="generator">
+                    <span>🤖</span>
+                    <span>Générateur</span>
+                </a>
+                <a href="dashboard.html" class="nav-link" data-page="dashboard">
+                    <span>📈</span>
+                    <span>Tableau de bord</span>
+                </a>
+                <a href="students.html" class="nav-link active" data-page="students">
+                    <span>👥</span>
+                    <span>Élèves</span>
+                </a>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <h1>Gestion des Élèves</h1>
+                <p>Ajoutez, modifiez ou supprimez des élèves</p>
+            </div>
+            
+            <!-- Actions -->
+            <div class="actions">
+                <button class="btn btn-primary" onclick="showAddStudentModal()">
+                    <span>➕</span>
+                    <span>Ajouter un élève</span>
+                </button>
+                <button class="btn btn-success" onclick="importStudents()">
+                    <span>📥</span>
+                    <span>Importer</span>
+                </button>
+                <button class="btn btn-info" onclick="exportStudents()">
+                    <span>📤</span>
+                    <span>Exporter</span>
+                </button>
+            </div>
+            
+            <!-- Search and Filter -->
+            <div class="search-filter">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Rechercher un élève...">
+                    <button class="btn btn-icon" onclick="searchStudents()">
+                        <span>🔍</span>
+                    </button>
+                </div>
+                
+                <div class="filters">
+                    <select id="levelFilter" onchange="filterStudents()" title="Filtrer par niveau">
+                        <option value="">Tous les niveaux</option>
+                        <option value="CP">CP</option>
+                        <option value="CE1">CE1</option>
+                        <option value="CE2">CE2</option>
+                        <option value="CM1">CM1</option>
+                        <option value="CM2">CM2</option>
+                    </select>
+                    
+                    <select id="statusFilter" onchange="filterStudents()" title="Filtrer par statut">
+                        <option value="">Tous les statuts</option>
+                        <option value="completed">Évaluations complètes</option>
+                        <option value="in_progress">En cours</option>
+                        <option value="not_started">Non évalués</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Students Table -->
+            <div class="card">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Niveau</th>
+                                <th>Statut</th>
+                                <th>Dernière évaluation</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTable">
+                            <!-- Rempli dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Add/Edit Student Modal -->
+    <div class="modal" id="studentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Ajouter un élève</h2>
+                <button class="btn btn-icon" onclick="closeModal()">✕</button>
+            </div>
+            
+            <form id="studentForm" onsubmit="handleStudentSubmit(event)">
+                <input type="hidden" id="studentId">
+                
+                <div class="form-group">
+                    <label for="studentName">Nom de l'élève</label>
+                    <input type="text" id="studentName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="studentLevel">Niveau</label>
+                    <select id="studentLevel" required>
+                        <option value="CP">CP</option>
+                        <option value="CE1">CE1</option>
+                        <option value="CE2">CE2</option>
+                        <option value="CM1">CM1</option>
+                        <option value="CM2">CM2</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="studentNotes">Notes</label>
+                    <textarea id="studentNotes" rows="3"></textarea>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Import Modal -->
+    <div class="modal" id="importModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Importer des élèves</h2>
+                <button class="btn btn-icon" onclick="closeModal()">✕</button>
+            </div>
+            
+            <form id="importForm" onsubmit="handleImport(event)">
+                <div class="form-group">
+                    <label for="importFile">Fichier CSV ou JSON</label>
+                    <input type="file" id="importFile" accept=".csv,.json" required>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Importer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script src="js/students.js"></script>
+</body>
+</html> 

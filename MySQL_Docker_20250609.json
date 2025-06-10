@@ -1,0 +1,228 @@
+{
+  "name": "MySQL Docker",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generer-commentaire",
+        "options": {}
+      },
+      "id": "6f4f0e8f-3315-4fba-8c78-e4fcc6133fac",
+      "name": "Webhook1",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        -60
+      ],
+      "webhookId": "c3a9eccb-4ee3-4424-bbc8-d8620024c3ae"
+    },
+    {
+      "parameters": {
+        "functionCode": "const nom = $json.nom;\nconst periode = $json.periode;\nconst competences = $json.competences;\nconst modele = $json.modele;\n\nreturn {\n  json: {\n    nom: nom,\n    periode: periode,\n    competences: competences,\n    modele: modele,\n    prompt: `Rédige un commentaire bienveillant, fluide et personnalisé pour l'élève ${nom}, en lien avec la période ${periode}. Commence par son prénom et valorise ses efforts. Il a travaillé sur les compétences suivantes : ${competences}. Donne des exemples concrets de progrès observés. Termine par une phrase motivante pour encourager sa poursuite des apprentissages.`,\n    model: modele,\n    options: {\n      temperature: 0.7,\n      num_predict: 500,\n      top_p: 0.9\n    }\n  }\n};"
+      },
+      "id": "bd08eec9-b785-4644-815b-3e67ad9daa2a",
+      "name": "Code1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        140,
+        -60
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "http://192.168.1.155:11434/api/generate",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\n  \"model\": \"mistral\",\n  \"prompt\": \"Rédige un commentaire bienveillant, fluide et personnalisé pour l'élève {{ $json.nom }}, en lien avec la période {{ $json.periode }}. Commence par son prénom et valorise ses efforts. Il a travaillé sur les compétences suivantes : {{ $json.competences }}. Donne des exemples concrets de progrès observés. Termine par une phrase motivante pour encourager sa poursuite des apprentissages.\",\n  \"stream\": false,\n  \"options\": {\n    \"temperature\": 0.7,\n    \"num_predict\": 500,\n    \"top_p\": 0.9\n  }\n}"
+      },
+      "id": "996b7de2-a0bd-4a48-b32b-7beae42784af",
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        320,
+        -60
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "CREATE TABLE IF NOT EXISTS commentaires (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  nom VARCHAR(255),\n  periode VARCHAR(100),\n  competences VARCHAR(500),\n  commentaire TEXT,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n)",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        520,
+        -80
+      ],
+      "id": "104a3247-2cd5-4a84-af3a-689728cae69b",
+      "name": "Créer Table",
+      "credentials": {
+        "mySql": {
+          "id": "p7gcN3UBQwsNkZHc",
+          "name": "MySQL account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "table": {
+          "__rl": true,
+          "value": "commentaires",
+          "mode": "list",
+          "cachedResultName": "commentaires"
+        },
+        "dataMode": "defineBelow",
+        "valuesToSend": {
+          "values": [
+            {
+              "column": "nom",
+              "value": "={{ $node[\"Code1\"].json.nom }}"
+            },
+            {
+              "column": "periode",
+              "value": "={{ $node[\"Code1\"].json.periode }}"
+            },
+            {
+              "column": "competences",
+              "value": "={{ $node[\"Code1\"].json.competences }}"
+            },
+            {
+              "column": "commentaire",
+              "value": "={{ $node[\"HTTP Request1\"].json.response }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        740,
+        -60
+      ],
+      "id": "ba3c771d-16f7-403e-b1bc-d8ff996862ad",
+      "name": "Enregistrer Commentaire",
+      "credentials": {
+        "mySql": {
+          "id": "5gJD5Nan3AvBtgsS",
+          "name": "MySQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9766f95a-f4ad-41b5-af44-113ae1f444f6",
+              "name": "Access-Control-Allow-Methods",
+              "value": "POST, GET, OPTIONS",
+              "type": "string"
+            },
+            {
+              "id": "278b4374-de0f-48ea-b332-e165092dfe81",
+              "name": "Access-Control-Allow-Origin",
+              "value": "*",
+              "type": "string"
+            },
+            {
+              "id": "56efad8c-5f92-4494-8a9c-bd0df67e08c1",
+              "name": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Accept",
+              "type": "string"
+            },
+            {
+              "id": "b5b599b9-1aa0-4022-b73d-9979113c51de",
+              "name": "Access-Control-Max-Age",
+              "value": "86400",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -60,
+        -60
+      ],
+      "id": "978e8a62-811e-42ea-aeea-159062acb714",
+      "name": "Set CORS Headers"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Créer Table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Créer Table": {
+      "main": [
+        [
+          {
+            "node": "Enregistrer Commentaire",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Set CORS Headers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set CORS Headers": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d2bf8e2f-f511-4445-81cc-e40d9dfb83d4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dbdc2074cc82bdf3742e21449a1f384df61f707afd006333ebd8c43bf9b509f2"
+  },
+  "id": "aAL3Y9wsCnMpZqXI",
+  "tags": []
+}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord - LSU V2</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
+    <meta name="theme-color" content="#667eea">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Tableau de Bord LSU</h1>
+            <p>Vue d'ensemble des évaluations et statistiques</p>
+        </header>
+        <div class="stat-cards">
+            <div class="stat-card">
+                <h3>Total Élèves</h3>
+                <p id="totalStudents">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Évaluations Complètes</h3>
+                <p id="completedEvaluations">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Évaluations en Cours</h3>
+                <p id="inProgressEvaluations">0</p>
+            </div>
+        </div>
+        <div class="chart-container">
+            <h2>Statistiques par Niveau</h2>
+            <div id="levelChart"></div>
+        </div>
+        <div class="activity-feed">
+            <h2>Activité Récente</h2>
+            <div id="activityList"></div>
+        </div>
+    </div>
+    <script type="module" src="js/dashboard.js"></script>
+    <script type="module" src="js/ollama-enhanced.js"></script>
+</body>
+</html> 

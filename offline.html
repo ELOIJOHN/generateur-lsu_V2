@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hors ligne - Générateur LSU</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1d29;
+            color: #ffffff;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .offline-container {
+            max-width: 500px;
+            padding: 30px;
+            background: #252a3a;
+            border-radius: 12px;
+            border: 1px solid #3a3f52;
+        }
+
+        .offline-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        p {
+            color: #8b92b0;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .retry-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .retry-btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .features {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: #8b92b0;
+        }
+
+        .feature-item::before {
+            content: "✓";
+            color: #10b981;
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">📡</div>
+        <h1>Vous êtes hors ligne</h1>
+        <p>La connexion à Internet semble être interrompue. Certaines fonctionnalités peuvent être limitées.</p>
+        
+        <div class="features">
+            <div class="feature-item">Accès aux données enregistrées localement</div>
+            <div class="feature-item">Génération de commentaires avec les templates</div>
+            <div class="feature-item">Gestion des élèves hors ligne</div>
+        </div>
+
+        <button class="retry-btn" onclick="window.location.reload()">
+            Réessayer la connexion
+        </button>
+    </div>
+
+    <script>
+        // Vérifier périodiquement la connexion
+        setInterval(() => {
+            if (navigator.onLine) {
+                window.location.reload();
+            }
+        }, 5000);
+
+        // Écouter les changements d'état de la connexion
+        window.addEventListener('online', () => {
+            window.location.reload();
+        });
+    </script>
+</body>
+</html> 

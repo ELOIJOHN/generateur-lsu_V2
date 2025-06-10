@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulaire LSU</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f3f3;
+      padding: 20px;
+    }
+    form {
+      background: #fff;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 15px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .success, .error {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    .success { color: green; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+
+  <form id="lsuForm">
+    <h2>Générateur de commentaire LSU</h2>
+
+    <label for="nom">Nom de l'élève :</label>
+    <input type="text" id="nom" name="nom" required />
+
+    <label for="periode">Période :</label>
+    <select id="periode" name="periode" required>
+      <option value="S1">Semestre 1</option>
+      <option value="S2">Semestre 2</option>
+    </select>
+
+    <label for="competences">Compétences :</label>
+    <textarea id="competences" name="competences" rows="5" required></textarea>
+
+    <button type="submit">Envoyer</button>
+
+    <div id="resultat" class="success" style="display:none;"></div>
+    <div id="erreur" class="error" style="display:none;"></div>
+  </form>
+
+  <script>
+    document.getElementById('lsuForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+
+      const nom = document.getElementById('nom').value;
+      const periode = document.getElementById('periode').value;
+      const competences = document.getElementById('competences').value;
+
+      const data = {
+        nom: nom,
+        periode: periode,
+        competences: competences
+      };
+
+      try {
+        const response = await fetch('http://localhost:5678/webhook-test/generer-commentaire', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (!response.ok) throw new Error('Erreur HTTP : ' + response.status);
+
+        const result = await response.json();
+        document.getElementById('resultat').innerText = '✅ Commentaire envoyé avec succès !';
+        document.getElementById('resultat').style.display = 'block';
+        document.getElementById('erreur').style.display = 'none';
+      } catch (error) {
+        document.getElementById('erreur').innerText = '❌ Une erreur est survenue : ' + error.message;
+        document.getElementById('erreur').style.display = 'block';
+        document.getElementById('resultat').style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

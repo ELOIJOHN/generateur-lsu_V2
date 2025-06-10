@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation LSU V2</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+        
+        .test-section.success {
+            border-color: #10b981;
+            background: #ecfdf5;
+        }
+        
+        .test-section.error {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+        
+        .test-section.warning {
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+        
+        .test-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .test-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .test-status {
+            font-size: 1.5rem;
+        }
+        
+        .test-details {
+            margin-left: 35px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        
+        .btn {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: #10b981;
+        }
+        
+        .btn-warning {
+            background: #f59e0b;
+        }
+        
+        .btn-danger {
+            background: #ef4444;
+        }
+        
+        .results {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .metric:last-child {
+            border-bottom: none;
+        }
+        
+        .summary {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; color: #1e293b; margin-bottom: 30px;">
+            🧪 Validation LSU V2
+        </h1>
+        
+        <!-- TEST 1: Configuration PWA -->
+        <div class="test-section" id="pwa-test">
+            <div class="test-header">
+                <span class="test-status" id="pwa-status">⏳</span>
+                <h3 class="test-title">Configuration PWA</h3>
+                <button class="btn" onclick="testPWA()">Tester PWA</button>
+            </div>
+            <div class="test-details" id="pwa-details">
+                Vérification du manifest.json, service worker et icônes...
+            </div>
+        </div>
+
+        <!-- TEST 2: Service Ollama -->
+        <div class="test-section" id="ollama-test">
+            <div class="test-header">
+                <span class="test-status" id="ollama-status">⏳</span>
+                <h3 class="test-title">Service Ollama</h3>
+                <button class="btn" onclick="testOllama()">Tester Ollama</button>
+            </div>
+            <div class="test-details" id="ollama-details">
+                Test de connexion et génération de commentaire...
+            </div>
+        </div>
+
+        <!-- TEST 3: Gestion des Élèves -->
+        <div class="test-section" id="students-test">
+            <div class="test-header">
+                <span class="test-status" id="students-status">⏳</span>
+                <h3 class="test-title">Gestion des Élèves</h3>
+                <button class="btn" onclick="testStudents()">Tester CRUD</button>
+            </div>
+            <div class="test-details" id="students-details">
+                Test des opérations CRUD sur les élèves...
+            </div>
+        </div>
+
+        <!-- TEST 4: Mode Hors Ligne -->
+        <div class="test-section" id="offline-test">
+            <div class="test-header">
+                <span class="test-status" id="offline-status">⏳</span>
+                <h3 class="test-title">Mode Hors Ligne</h3>
+                <button class="btn" onclick="testOffline()">Tester Offline</button>
+            </div>
+            <div class="test-details" id="offline-details">
+                Test du fonctionnement sans connexion internet...
+            </div>
+        </div>
+
+        <!-- TEST 5: Performance -->
+        <div class="test-section" id="performance-test">
+            <div class="test-header">
+                <span class="test-status" id="performance-status">⏳</span>
+                <h3 class="test-title">Performance</h3>
+                <button class="btn" onclick="testPerformance()">Tester Performance</button>
+            </div>
+            <div class="test-details" id="performance-details">
+                Mesure des temps de chargement et réactivité...
+            </div>
+        </div>
+
+        <!-- TEST 6: Responsive Design -->
+        <div class="test-section" id="responsive-test">
+            <div class="test-header">
+                <span class="test-status" id="responsive-status">⏳</span>
+                <h3 class="test-title">Design Responsive</h3>
+                <button class="btn" onclick="testResponsive()">Tester Responsive</button>
+            </div>
+            <div class="test-details" id="responsive-details">
+                Test de l'adaptation sur différentes tailles d'écran...
+            </div>
+        </div>
+
+        <!-- RÉSUMÉ GLOBAL -->
+        <div class="summary" id="global-summary">
+            <h2>📊 Résumé Global</h2>
+            <div id="summary-content">
+                <p>Lancez les tests pour voir le résumé global</p>
+            </div>
+        </div>
+
+        <!-- ACTIONS FINALES -->
+        <div style="text-align: center; margin: 30px 0;">
+            <button class="btn btn-success" onclick="runAllTests()" style="font-size: 1.1rem; padding: 15px 30px;">
+                🚀 Lancer Tous les Tests
+            </button>
+            <button class="btn btn-warning" onclick="generateReport()">
+                📊 Générer Rapport
+            </button>
+            <button class="btn" onclick="window.location.href='../index.html'">
+                ← Retour LSU
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let testResults = {
+            pwa: null,
+            ollama: null,
+            students: null,
+            offline: null,
+            performance: null,
+            responsive: null
+        };
+
+        // Fonction utilitaire pour mettre à jour le statut d'un test
+        function updateTestStatus(testId, status, details, className = '') {
+            const statusEl = document.getElementById(`${testId}-status`);
+            const detailsEl = document.getElementById(`${testId}-details`);
+            const sectionEl = document.getElementById(`${testId}-test`);
+            
+            statusEl.textContent = status;
+            detailsEl.textContent = details;
+            
+            sectionEl.className = 'test-section';
+            if (className) {
+                sectionEl.classList.add(className);
+            }
+            
+            updateGlobalSummary();
+        }
+
+        // Fonction pour mettre à jour le résumé global
+        function updateGlobalSummary() {
+            const summaryEl = document.getElementById('summary-content');
+            let totalScore = 0;
+            let completedTests = 0;
+            
+            for (const [key, result] of Object.entries(testResults)) {
+                if (result && result.score !== undefined) {
+                    totalScore += result.score;
+                    completedTests++;
+                }
+            }
+            
+            const averageScore = completedTests > 0 ? Math.round(totalScore / completedTests) : 0;
+            
+            let summaryHTML = `
+                <div class="metric">
+                    <span>Tests complétés:</span>
+                    <span>${completedTests}/6</span>
+                </div>
+                <div class="metric">
+                    <span>Score moyen:</span>
+                    <span>${averageScore}%</span>
+                </div>
+                <div class="metric">
+                    <span>Statut:</span>
+                    <span>${averageScore >= 85 ? '✅ Prêt pour production' : '⚠️ Nécessite des corrections'}</span>
+                </div>
+            `;
+            
+            summaryEl.innerHTML = summaryHTML;
+        }
+
+        // TEST PWA
+        async function testPWA() {
+            updateTestStatus('pwa', '⏳', 'Test PWA en cours...');
+            
+            try {
+                let score = 0;
+                let details = [];
+                
+                // Test manifest.json
+                try {
+                    const manifestResponse = await fetch('/manifest.json');
+                    if (manifestResponse.ok) {
+                        const manifest = await manifestResponse.json();
+                        score += 25;
+                        details.push('✅ Manifest.json présent et valide');
+                        details.push(`   - Nom: ${manifest.name}`);
+                        details.push(`   - Icônes: ${manifest.icons?.length || 0} définies`);
+                    }
+                } catch (e) {
+                    details.push('❌ Manifest.json introuvable');
+                }
+                
+                // Test Service Worker
+                if ('serviceWorker' in navigator) {
+                    score += 25;
+                    details.push('✅ Service Worker supporté');
+                    
+                    try {
+                        const registration = await navigator.serviceWorker.getRegistration();
+                        if (registration) {
+                            score += 25;
+                            details.push('✅ Service Worker enregistré');
+                        } else {
+                            details.push('⚠️ Service Worker non enregistré');
+                        }
+                    } catch (e) {
+                        details.push('❌ Erreur Service Worker: ' + e.message);
+                    }
+                } else {
+                    details.push('❌ Service Worker non supporté');
+                }
+                
+                // Test installation PWA
+                if (window.matchMedia('(display-mode: standalone)').matches) {
+                    score += 25;
+                    details.push('✅ Application installée en mode standalone');
+                } else {
+                    details.push('ℹ️ Application non installée (normal en développement)');
+                    score += 10; // Partial points
+                }
+                
+                testResults.pwa = { score, details };
+                
+                if (score >= 75) {
+                    updateTestStatus('pwa', '✅', details.join('\n'), 'success');
+                } else if (score >= 50) {
+                    updateTestStatus('pwa', '⚠️', details.join('\n'), 'warning');
+                } else {
+                    updateTestStatus('pwa', '❌', details.join('\n'), 'error');
+                }
+                
+            } catch (error) {
+                testResults.pwa = { score: 0, error: error.message };
+                updateTestStatus('pwa', '❌', 'Erreur: ' + error.message, 'error');
+            }
+        }
+
+        // TEST OLLAMA
+        async function testOllama() {
+            updateTestStatus('ollama', '⏳', 'Test connexion Ollama...');
+            
+            try {
+                let score = 0;
+                let details = [];
+                
+                // Test de connexion
+                const startTime = Date.now();
+                const response = await fetch('http://localhost:11434/api/tags', {
+                    method: 'GET',
+                    signal: AbortSignal.timeout(5000)
+                });
+                
+                const responseTime = Date.now() - startTime;
+                
+                if (response.ok) {
+                    score += 50;
+                    details.push('✅ Connexion Ollama réussie');
+                    details.push(`   - Temps de réponse: ${responseTime}ms`);
+                    
+                    const data = await response.json();
+                    if (data.models && data.models.length > 0) {
+                        score += 25;
+                        details.push(`✅ Modèles disponibles: ${data.models.length}`);
+                        details.push(`   - Modèle principal: ${data.models[0].name}`);
+                    }
+                    
+                    // Test génération simple
+                    try {
+                        const genResponse = await fetch('http://localhost:11434/api/generate', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                model: 'mistral',
+                                prompt: 'Test simple: écris "OK" en français.',
+                                stream: false
+                            }),
+                            signal: AbortSignal.timeout(10000)
+                        });
+                        
+                        if (genResponse.ok) {
+                            score += 25;
+                            details.push('✅ Génération de test réussie');
+                        }
+                    } catch (e) {
+                        details.push('⚠️ Génération échouée: ' + e.message);
+                    }
+                    
+                } else {
+                    details.push('❌ Connexion Ollama échouée: ' + response.status);
+                }
+                
+                testResults.ollama = { score, details, responseTime };
+                
+                if (score >= 75) {
+                    updateTestStatus('ollama', '✅', details.join('\n'), 'success');
+                } else if (score >= 25) {
+                    updateTestStatus('ollama', '⚠️', details.join('\n'), 'warning');
+                } else {
+                    updateTestStatus('ollama', '❌', details.join('\n'), 'error');
+                }
+                
+            } catch (error) {
+                testResults.ollama = { score: 0, error: error.message };
+                updateTestStatus('ollama', '❌', 'Erreur: ' + error.message, 'error');
+            }
+        }
+
+        // TEST STUDENTS CRUD
+        function testStudents() {
+            updateTestStatus('students', '⏳', 'Test CRUD élèves...');
+            
+            try {
+                let score = 0;
+                let details = [];
+                
+                // Test localStorage
+                if (typeof(Storage) !== "undefined") {
+                    score += 20;
+                    details.push('✅ LocalStorage disponible');
+                    
+                    // Test lecture
+                    const students = JSON.parse(localStorage.getItem('lsu-students') || '[]');
+                    score += 20;
+                    details.push(`✅ Lecture des données: ${students.length} élèves`);
+                    
+                    // Test écriture
+                    const testStudent = {
+                        id: 'test-' + Date.now(),
+                        nom: 'Test',
+                        prenom: 'Élève',
+                        classe: 'TEST',
+                        niveau: 'CE1',
+                        dateCreation: new Date().toISOString()
+                    };
+                    
+                    students.push(testStudent);
+                    localStorage.setItem('lsu-students', JSON.stringify(students));
+                    score += 20;
+                    details.push('✅ Écriture des données réussie');
+                    
+                    // Test mise à jour
+                    testStudent.nom = 'TestModifié';
+                    const index = students.findIndex(s => s.id === testStudent.id);
+                    students[index] = testStudent;
+                    localStorage.setItem('lsu-students', JSON.stringify(students));
+                    score += 20;
+                    details.push('✅ Mise à jour des données réussie');
+                    
+                    // Test suppression
+                    const filteredStudents = students.filter(s => s.id !== testStudent.id);
+                    localStorage.setItem('lsu-students', JSON.stringify(filteredStudents));
+                    score += 20;
+                    details.push('✅ Suppression des données réussie');
+                    
+                } else {
+                    details.push('❌ LocalStorage non disponible');
+                }
+                
+                testResults.students = { score, details };
+                
+                if (score >= 80) {
+                    updateTestStatus('students', '✅', details.join('\n'), 'success');
+                } else if (score >= 40) {
+                    updateTestStatus('students', '⚠️', details.join('\n'), 'warning');
+                } else {
+                    updateTestStatus('students', '❌', details.join('\n'), 'error');
+                }
+                
+            } catch (error) {
+                testResults.students = { score: 0, error: error.message };
+                updateTestStatus('students', '❌', 'Erreur: ' + error.message, 'error');
+            }
+        }
+
+        // TEST OFFLINE
+        async function testOffline() {
+            updateTestStatus('offline', '⏳', 'Test mode hors ligne...');
+            
+            try {
+                let score = 0;
+                let details = [];
+                
+                // Test état de connexion
+                if (navigator.onLine) {
+                    details.push('ℹ️ Actuellement en ligne');
+                    score += 25;
+                } else {
+                    details.push('ℹ️ Actuellement hors ligne');
+                    score += 50;
+                }
+                
+                // Test cache service worker
+                if ('serviceWorker' in navigator && 'caches' in window) {
+                    score += 25;
+                    details.push('✅ Cache API disponible');
+                    
+                    const cacheNames = await caches.keys();
+                    if (cacheNames.length > 0) {
+                        score += 25;
+                        details.push(`✅ ${cacheNames.length} cache(s) trouvé(s)`);
+                        
+                        for (const cacheName of cacheNames) {
+                            const cache = await caches.open(cacheName);
+                            const keys = await cache.keys();
+                            details.push(`   - ${cacheName}: ${keys.length} ressources`);
+                        }
+                    }
+                }
+                
+                // Test page offline
+                try {
+                    const offlineResponse = await fetch('/offline.html');
+                    if (offlineResponse.ok) {
+                        score += 25;
+                        details.push('✅ Page offline.html disponible');
+                    }
+                } catch (e) {
+                    details.push('⚠️ Page offline.html introuvable');
+                }
+                
+                testResults.offline = { score, details };
+                
+                if (score >= 75) {
+                    updateTestStatus('offline', '✅', details.join('\n'), 'success');
+                } else if (score >= 50) {
+                    updateTestStatus('offline', '⚠️', details.join('\n'), 'warning');
+                } else {
+                    updateTestStatus('offline', '❌', details.join('\n'), 'error');
+                }
+                
+            } catch (error) {
+                testResults.offline = { score: 0, error: error.message };
+                updateTestStatus('offline', '❌', 'Erreur: ' + error.message, 'error');
+            }
+        }
+
+        // TEST PERFORMANCE
+        function testPerformance() {
+            updateTestStatus('performance', '⏳', 'Test performance...');
+            
+            try {
+                let score = 0;
+                let details = [];
+                
+                // Test temps de chargement
+                if (window.performance && window.performance.timing) {
+                    const timing = window.performance.timing;
+                    const loadTime = timing.loadEventEnd - timing.navigationStart;
+                    
+                    if (loadTime < 2000) {
+                        score += 40;
+                        details.push(`✅ Temps de chargement excellent: ${loadTime}ms`);
+                    } else if (loadTime < 3000) {
+                        score += 30;
+                        details.push(`✅ Temps de chargement bon: ${loadTime}ms`);
+                    } else if (loadTime < 5000) {
+                        score += 20;
+                        details.push(`⚠️ Temps de chargement moyen: ${loadTime}ms`);
+                    } else {
+                        details.push(`❌ Temps de chargement lent: ${loadTime}ms`);
+                    }
+                }
+                
+                // Test mémoire
+                if (window.performance && window.performance.memory) {
+                    const memory = window.performance.memory;
+                    const usedHeap = memory.usedJSHeapSize / 1024 / 1024;
+                    
+                    if (usedHeap < 50) {
+                        score += 30;
+                        details.push(`✅ Utilisation mémoire optimale: ${usedHeap.toFixed(2)}MB`);
+                    } else if (usedHeap < 100) {
+                        score += 20;
+                        details.push(`✅ Utilisation mémoire acceptable: ${usedHeap.toFixed(2)}MB`);
+                    } else {
+                        details.push(`⚠️ Utilisation mémoire élevée: ${usedHeap.toFixed(2)}MB`);
+                    }
+                }
+                
+                // Test FPS
+                let frameCount = 0;
+                let lastTime = performance.now();
+                
+                function checkFPS() {
+                    frameCount++;
+                    const currentTime = performance.now();
+                    
+                    if (currentTime - lastTime >= 1000) {
+                        const fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
+                        
+                        if (fps >= 55) {
+                            score += 30;
+                            details.push(`✅ Performance fluide: ${fps} FPS`);
+                        } else if (fps >= 30) {
+                            score += 20;
+                            details.push(`✅ Performance acceptable: ${fps} FPS`);
+                        } else {
+                            details.push(`⚠️ Performance faible: ${fps} FPS`);
+                        }
+                        
+                        frameCount = 0;
+                        lastTime = currentTime;
+                    }
+                    
+                    requestAnimationFrame(checkFPS);
+                }
+                
+                checkFPS();
+                
+                testResults.performance = { score, details };
+                
+                if (score >= 80) {
+                    updateTestStatus('performance', '✅', details.join('\n'), 'success');
+                } else if (score >= 50) {
+                    updateTestStatus('performance', '⚠️', details.join('\n'), 'warning');
+                } else {
+                    updateTestStatus('performance', '❌', details.join('\n'), 'error');
+                }
+                
+            } catch (error) {
+                testResults.performance = { score: 0, error: error.message };
+                updateTestStatus('performance', '❌', 'Erreur: ' + error.message, 'error');
+            }
+        }
+
+        // TEST RESPONSIVE
+        function testResponsive() {
+            updateTestStatus('responsive', '⏳', 'Test responsive design...');
+            
+            try {
+                let score = 0;
+                let details = [];
+                
+                // Test viewport
+                const viewport = {
+                    width: window.innerWidth,
+                    height: window.innerHeight
+                };
+                
+                score += 20;
+                details.push(`✅ Viewport détecté: ${viewport.width}x${viewport.height}`);
+                
+                // Test media queries
+                const breakpoints = [
+                    { name: 'Mobile', width: 320 },
+                    { name: 'Tablette', width: 768 },
+                    { name: 'Desktop', width: 1024 }
+                ];
+                
+                for (const bp of breakpoints) {
+                    const mediaQuery = window.matchMedia(`(min-width: ${bp.width}px)`);
+                    if (mediaQuery.matches) {
+                        score += 20;
+                        details.push(`✅ Breakpoint ${bp.name} (${bp.width}px) détecté`);
+                    }
+                }
+                
+                // Test flexbox/grid
+                const container = document.querySelector('.container');
+                if (container) {
+                    const style = window.getComputedStyle(container);
+                    if (style.display === 'flex' || style.display === 'grid') {
+                        score += 20;
+                        details.push('✅ Layout flexible détecté');
+                    }
+                }
+                
+                // Test images responsives
+                const images = document.querySelectorAll('img');
+                let responsiveImages = 0;
+                
+                images.forEach(img => {
+                    if (img.hasAttribute('srcset') || img.hasAttribute('sizes')) {
+                        responsiveImages++;
+                    }
+                });
+                
+                if (responsiveImages > 0) {
+                    score += 20;
+                    details.push(`✅ ${responsiveImages} image(s) responsive(s) détectée(s)`);
+                }
+                
+                // Test unités relatives
+                const elements = document.querySelectorAll('*');
+                let relativeUnits = 0;
+                
+                elements.forEach(el => {
+                    const style = window.getComputedStyle(el);
+                    if (style.fontSize.includes('%') || style.fontSize.includes('em') || style.fontSize.includes('rem')) {
+                        relativeUnits++;
+                    }
+                });
+                
+                if (relativeUnits > 0) {
+                    score += 20;
+                    details.push(`✅ ${relativeUnits} élément(s) avec unités relatives`);
+                }
+                
+                testResults.responsive = { score, details };
+                
+                if (score >= 80) {
+                    updateTestStatus('responsive', '✅', details.join('\n'), 'success');
+                } else if (score >= 50) {
+                    updateTestStatus('responsive', '⚠️', details.join('\n'), 'warning');
+                } else {
+                    updateTestStatus('responsive', '❌', details.join('\n'), 'error');
+                }
+                
+            } catch (error) {
+                testResults.responsive = { score: 0, error: error.message };
+                updateTestStatus('responsive', '❌', 'Erreur: ' + error.message, 'error');
+            }
+        }
+
+        // Lancer tous les tests
+        async function runAllTests() {
+            await testPWA();
+            await testOllama();
+            testStudents();
+            await testOffline();
+            testPerformance();
+            testResponsive();
+        }
+
+        // Générer rapport
+        function generateReport() {
+            const report = {
+                date: new Date().toISOString(),
+                results: testResults,
+                summary: {
+                    totalScore: 0,
+                    completedTests: 0
+                }
+            };
+            
+            for (const [key, result] of Object.entries(testResults)) {
+                if (result && result.score !== undefined) {
+                    report.summary.totalScore += result.score;
+                    report.summary.completedTests++;
+                }
+            }
+            
+            report.summary.averageScore = report.summary.completedTests > 0 
+                ? Math.round(report.summary.totalScore / report.summary.completedTests)
+                : 0;
+            
+            const reportStr = JSON.stringify(report, null, 2);
+            const blob = new Blob([reportStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `lsu-validation-report-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html> 

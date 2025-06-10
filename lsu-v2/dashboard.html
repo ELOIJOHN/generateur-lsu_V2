@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord - LSU v2.0</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span>📊</span>
+                <span>Générateur LSU</span>
+            </div>
+            
+            <nav class="nav">
+                <a href="index.html" class="nav-link" data-page="generator">
+                    <span>🤖</span>
+                    <span>Générateur</span>
+                </a>
+                <a href="dashboard.html" class="nav-link active" data-page="dashboard">
+                    <span>📈</span>
+                    <span>Tableau de bord</span>
+                </a>
+                <a href="students.html" class="nav-link" data-page="students">
+                    <span>👥</span>
+                    <span>Élèves</span>
+                </a>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <h1>Tableau de bord</h1>
+                <p>Statistiques et analyses des évaluations</p>
+            </div>
+            
+            <!-- Stats Overview -->
+            <div class="grid grid-4">
+                <div class="stats-card">
+                    <div class="stats-label">Total Élèves</div>
+                    <div class="stats-number" id="totalStudents">0</div>
+                </div>
+                
+                <div class="stats-card">
+                    <div class="stats-label">Évaluations Complètes</div>
+                    <div class="stats-number" id="completedEvals">0</div>
+                </div>
+                
+                <div class="stats-card">
+                    <div class="stats-label">En Cours</div>
+                    <div class="stats-number" id="inProgressEvals">0</div>
+                </div>
+                
+                <div class="stats-card">
+                    <div class="stats-label">Non Évalués</div>
+                    <div class="stats-number" id="notStartedEvals">0</div>
+                </div>
+            </div>
+            
+            <!-- Charts -->
+            <div class="grid grid-2">
+                <div class="chart-container">
+                    <h3>Répartition par Niveau</h3>
+                    <canvas id="levelChart"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <h3>État des Évaluations</h3>
+                    <canvas id="evaluationStatusChart"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <h3>Distribution des Notes</h3>
+                    <canvas id="gradesChart"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <h3>Évolution Mensuelle</h3>
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="card">
+                <h3>Activité Récente</h3>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Élève</th>
+                                <th>Action</th>
+                                <th>Détails</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activityTable">
+                            <!-- Rempli dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Export Options -->
+            <div class="card">
+                <h3>Options d'Export</h3>
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="exportToPDF()">
+                        <span>📄</span>
+                        <span>Rapport PDF</span>
+                    </button>
+                    <button class="btn btn-success" onclick="exportToCSV()">
+                        <span>📊</span>
+                        <span>Export CSV</span>
+                    </button>
+                    <button class="btn btn-info" onclick="exportToJSON()">
+                        <span>📦</span>
+                        <span>Export JSON</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html> 

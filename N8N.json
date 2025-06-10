@@ -1,0 +1,92 @@
+{
+    "meta": {
+      "instanceId": "local"
+    },
+    "nodes": [
+      {
+        "parameters": {
+          "path": "generer-commentaire",
+          "responseMode": "onReceived",
+          "options": {}
+        },
+        "id": "c4dc5e5b-8c8a-4f5a-9d2e-1a3b4c5d6e7f",
+        "name": "Webhook Réception",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 1.1,
+        "position": [
+          240,
+          300
+        ]
+      },
+      {
+        "parameters": {
+          "functionCode": "// Validation et préparation des données\nconst data = items[0].json;\n\n// Validation des champs obligatoires\nif (!data.nom || typeof data.nom !== 'string' || data.nom.trim() === '') {\n  throw new Error('Le champ \"nom\" est obligatoire et doit être une chaîne non vide');\n}\n\nif (!data.periode || typeof data.periode !== 'string' || data.periode.trim() === '') {\n  throw new Error('Le champ \"periode\" est obligatoire et doit être une chaîne non vide');\n}\n\nif (!data.competences || typeof data.competences !== 'string' || data.competences.trim() === '') {\n  throw new Error('Le champ \"competences\" est obligatoire et doit être une chaîne non vide');\n}\n\n// Nettoyage des données\nconst nom = data.nom.trim();\nconst periode = data.periode.trim();\nconst competences = data.competences.trim();\nconst niveau = data.niveau ? data.niveau.trim() : '';\nconst matiere = data.matiere ? data.matiere.trim() : '';\n\n// Validation de la longueur\nif (nom.length > 100) {\n  throw new Error('Le nom ne peut pas dépasser 100 caractères');\n}\n\nif (competences.length > 500) {\n  throw new Error('Les compétences ne peuvent pas dépasser 500 caractères');\n}\n\n// Construction du prompt structuré pour LSU\nlet prompt = `En tant qu'enseignant(e), rédige un commentaire pour le Livret Scolaire Unique (LSU) selon les critères suivants :\\n\\n`;\nprompt += `INFORMATIONS ÉLÈVE :\\n`;\nprompt += `- Nom : ${nom}\\n`;\nprompt += `- Période : ${periode}\\n`;\nif (niveau) prompt += `- Niveau : ${niveau}\\n`;\nif (matiere) prompt += `- Matière : ${matiere}\\n`;\nprompt += `\\nCOMPÉTENCES OBSERVÉES :\\n${competences}\\n\\n`;\n\nprompt += `CONSIGNES POUR LE COMMENTAIRE :\\n`;\nprompt += `- Longueur : entre 50 et 150 mots\\n`;\nprompt += `- Ton : bienveillant, constructif et professionnel\\n`;\nprompt += `- Contenu : mentionner les progrès, points forts et axes d'amélioration\\n`;\nprompt += `- Style : adapté au niveau scolaire, éviter les formulations négatives\\n`;\nprompt += `- Format : paragraphe cohérent sans titre ni introduction\\n\\n`;\n\nprompt += `COMMENTAIRE LSU :`;\n\nreturn [{\n  json: {\n    prompt: prompt,\n    nom: nom,\n    periode: periode,\n    competences: competences,\n    niveau: niveau,\n    matiere: matiere,\n    timestamp: new Date().toISOString()\n  }\n}];"
+        },
+        "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+        "name": "Validation et Prompt",
+        "type": "n8n-nodes-base.function",
+        "typeVersion": 1,
+        "position": [
+          460,
+          300
+        ]
+      },
+      {
+        "parameters": {
+          "url": "http://ollama:11434/api/generate",
+          "method": "POST",
+          "responseFormat": "json",
+          "jsonParameters": true,
+          "options": {
+            "timeout": 45000,
+            "retry": {
+              "enabled": true,
+              "maxAttempts": 2,
+              "waitBetween": 1000
+            }
+          },
+          "bodyParametersJson": "={\n  \"model\": \"mistral\",\n  \"prompt\": {{ JSON.stringify($json.prompt) }},\n  \"stream\": false,\n  \"options\": {\n    \"temperature\": 0.7,\n    \"top_p\": 0.9,\n    \"top_k\": 40,\n    \"num_predict\": 200,\n    \"stop\": [\"\\n\\n\", \"COMMENTAIRE\", \"---\"]\n  }\n}"
+        },
+        "id": "f1e2d3c4-b5a6-9780-1234-567890fedcba",
+        "name": "Appel Ollama",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [
+          680,
+          300
+        ]
+      },
+      {
+        "parameters": {
+          "functionCode": "// Traitement et nettoyage de la réponse Ollama\nconst ollamaResponse = items[0].json;\nconst previousData = $node[\"Validation et Prompt\"].json;\n\n// Vérification de la réponse\nif (!ollamaResponse.response) {\n  throw new Error('Aucune réponse générée par le modèle Ollama');\n}\n\n// Nettoyage du commentaire\nlet commentaire = String(ollamaResponse.response).trim();\n\n// Suppression des préfixes/suffixes indésirables\ncommentaire = commentaire\n  .replace(/^(Commentaire\\s*LSU\\s*:?\\s*)/i, '')\n  .replace(/^(Commentaire\\s*:?\\s*)/i, '')\n  .replace(/\\n\\n+/g, ' ')\n  .replace(/\\s+/g, ' ')\n  .trim();\n\n// Nettoyage des caractères indésirables\ncommentaire = commentaire\n  .replace(/[\"\"]/g, '\"')\n  .replace(/['']/g, \"'\")\n  .replace(/…/g, '...');\n\n// Validation de la longueur\nif (commentaire.length < 30) {\n  throw new Error('Commentaire généré trop court (moins de 30 caractères)');\n}\n\n// Limitation de la longueur si nécessaire\nif (commentaire.length > 300) {\n  // Couper à la dernière phrase complète\n  const lastPeriod = commentaire.substring(0, 297).lastIndexOf('.');\n  if (lastPeriod > 200) {\n    commentaire = commentaire.substring(0, lastPeriod + 1);\n  } else {\n    commentaire = commentaire.substring(0, 297) + '...';\n  }\n}\n\n// S'assurer que le commentaire se termine par un point\nif (!commentaire.match(/[.!?]$/)) {\n  commentaire += '.';\n}\n\nconst now = new Date();\n\nreturn [{\n  json: {\n    nom: previousData.nom,\n    periode: previousData.periode,\n    competences: previousData.competences,\n    niveau: previousData.niveau || null,\n    matiere: previousData.matiere || null,\n    commentaire: commentaire,\n    longueur_commentaire: commentaire.length,\n    date_creation: now.toISOString(),\n    date_creation_fr: now.toLocaleDateString('fr-FR') + ' ' + now.toLocaleTimeString('fr-FR'),\n    statut: 'genere'\n  }\n}];"
+        },
+        "id": "b2c3d4e5-f6a7-8901-2345-678901bcdefg",
+        "name": "Nettoyage Réponse",
+        "type": "n8n-nodes-base.function",
+        "typeVersion": 1,
+        "position": [
+          900,
+          300
+        ]
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "INSERT INTO commentaires_lsu (nom, periode, competences, niveau, matiere, commentaire, longueur_commentaire, date_creation, statut) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          "additionalFields": {
+            "queryParameters": "={{ JSON.stringify([$json.nom, $json.periode, $json.competences, $json.niveau, $json.matiere, $json.commentaire, $json.longueur_commentaire, $json.date_creation, $json.statut]) }}"
+          }
+        },
+        "id": "d4e5f6a7-b8c9-0123-4567-890123defghi",
+        "name": "Sauvegarde SQLite",
+        "type": "n8n-nodes-base.sqlite",
+        "typeVersion": 1,
+        "position": [
+          1120,
+          300
+        ]
+      },
+      {
+        "parameters": {
+          "options": {},
+          "responseData": "={\n  \"success\": true,\n  \"message\": \"Commentaire LSU généré avec succès\",\n  \"data\": {\n    \"nom\": {{ JSON.stringify($json.nom) }},\n    \"periode\": {{ JSON.stringify($json.periode) }},\n    \"commentaire\": {{ JSON.stringify($json.commentaire) }},\n    \"longueur\": {{ $json.longueur_commentaire }},\n    \"date_creation\": {{ JSON.stringify($json.date_creation_fr) }}\n  },\n  \"timestamp\": {{ JSON.stringify($json.date_creation) }}\n}",\n        \"responseCode\": 200\n      },\n      \"id\": \"e5f6a7b8-c9d0-1234-5678-901234efghij\",\n      \"name\": \"Réponse Succès\",\n      \"type\": \"n8n-nodes-base.respondToWebhook\",\n      \"typeVersion\": 1.1,\n      \"position\": [\n        1340,\n        300\n      ]\n    },\n    {\n      \"parameters\": {\n        \"options\": {},\n        \"responseData\": \"={\\n  \\\"success\\\": false,\\n  \\\"error\\\": {{ JSON.stringify($json.error?.message || 'Erreur lors de la génération du commentaire') }},\\n  \\\"details\\\": {{ JSON.stringify($json.error?.stack) }},\\n  \\\"timestamp\\\": {{ JSON.stringify(new Date().toISOString()) }}\\n}\",\n        \"responseCode\": 400\n      },\n      \"id\": \"f6a7b8c9-d0e1-2345-6789-012345fghijk\",\n      \"name\": \"Réponse Erreur\",\n      \"type\": \"n8n-nodes-base.respondToWebhook\",\n      \"typeVersion\": 1.1,\n      \"position\": [\n        680,\n        500\n      ]\n    },\n    {\n      \"parameters\": {\n        \"functionCode\": \"// Test de connectivité Ollama\\nconst testData = {\\n  nom: 'Test Élève',\\n  periode: 'Période 1',\\n  competences: 'Lecture, écriture, calcul'\\n};\\n\\nreturn [{ json: testData }];\"\n      },\n      \"id\": \"a7b8c9d0-e1f2-3456-7890-123456ghijkl\",\n      \"name\": \"Test Données\",\n      \"type\": \"n8n-nodes-base.function\",\n      \"typeVersion\": 1,\n      \"position\": [\n        240,\n        500\n      ],\n      \"disabled\": true\n    }\n  ],\n  \"connections\": {\n    \"Webhook Réception\": {\n      \"main\": [\n        [\n          {\n            \"node\": \"Validation et Prompt\",\n            \"type\": \"main\",\n            \"index\": 0\n          }\n        ]\n      ]\n    },\n    \"Validation et Prompt\": {\n      \"main\": [\n        [\n          {\n            \"node\": \"Appel Ollama\",\n            \"type\": \"main\",\n            \"index\": 0\n          }\n        ]\n      ]\n    },\n    \"Appel Ollama\": {\n      \"main\": [\n        [\n          {\n            \"node\": \"Nettoyage Réponse\",\n            \"type\": \"main\",\n            \"index\": 0\n          }\n        ]\n      ]\n    },\n    \"Nettoyage Réponse\": {\n      \"main\": [\n        [\n          {\n            \"node\": \"Sauvegarde SQLite\",\n            \"type\": \"main\",\n            \"index\": 0\n          }\n        ]\n      ]\n    },\n    \"Sauvegarde SQLite\": {\n      \"main\": [\n        [\n          {\n            \"node\": \"Réponse Succès\",\n            \"type\": \"main\",\n            \"index\": 0\n          }\n        ]\n      ]\n    }\n  },\n  \"pinData\": {},\n  \"settings\": {\n    \"errorWorkflow\": {\n      \"errorDataPropertyName\": \"error\"\n    },\n    \"timezone\": \"Europe/Paris\",\n    \"saveManualExecutions\": true\n  },\n  \"staticData\": null,\n  \"tags\": [\n    {\n      \"createdAt\": \"2025-06-04T10:00:00.000Z\",\n      \"updatedAt\": \"2025-06-04T10:00:00.000Z\",\n      \"id\": \"LSU\",\n      \"name\": \"LSU\"\n    },\n    {\n      \"createdAt\": \"2025-06-04T10:00:00.000Z\",\n      \"updatedAt\": \"2025-06-04T10:00:00.000Z\",\n      \"id\": \"Education\",\n      \"name\": \"Education\"\n    }\n  ],\n  \"triggerCount\": 1,\n  \"updatedAt\": \"2025-06-04T10:00:00.000Z\",\n  \"versionId\": \"draft\"\n}

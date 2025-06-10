@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Générateur de Commentaire LSU</title>
+</head>
+<body>
+  <h1>Commentaire LSU</h1>
+  <form id="comment-form">
+    <label>Nom : <input type="text" name="nom" required></label><br>
+    <label>Période : <input type="text" name="periode" required></label><br>
+    <label>Compétences : <input type="text" name="competences" required></label><br>
+    <button type="submit">Envoyer</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    const form = document.getElementById("comment-form");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const data = {
+        nom: form.nom.value,
+        periode: form.periode.value,
+        competences: form.competences.value,
+      };
+      const response = await fetch("http://localhost:5678/webhook-test/generer-commentaire", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.text();
+      document.getElementById("result").innerText = "Réponse : " + result;
+    });
+  </script>
+</body>
+</html>

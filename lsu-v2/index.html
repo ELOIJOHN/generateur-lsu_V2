@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur LSU v2.0</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span>📊</span>
+                <span>Générateur LSU</span>
+            </div>
+            
+            <nav class="nav">
+                <a href="index.html" class="nav-link active" data-page="generator">
+                    <span>🤖</span>
+                    <span>Générateur</span>
+                </a>
+                <a href="dashboard.html" class="nav-link" data-page="dashboard">
+                    <span>📈</span>
+                    <span>Tableau de bord</span>
+                </a>
+                <a href="students.html" class="nav-link" data-page="students">
+                    <span>👥</span>
+                    <span>Élèves</span>
+                </a>
+            </nav>
+            
+            <div class="section-title">Élèves</div>
+            <div id="students-container">
+                <!-- Liste des élèves dynamique -->
+            </div>
+            
+            <button class="btn btn-primary" id="addStudentBtn">
+                <span>➕</span>
+                <span>Ajouter un élève</span>
+            </button>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <h1 id="currentStudentName">Sélectionnez un élève</h1>
+                <p>Génération automatique de commentaires personnalisés</p>
+            </div>
+            
+            <!-- Info Grid -->
+            <div class="grid grid-4">
+                <div class="card">
+                    <label for="niveauSelect">Niveau</label>
+                    <select id="niveauSelect" class="form-control" title="Sélectionnez le niveau">
+                        <option value="cp">CP</option>
+                        <option value="ce1">CE1</option>
+                        <option value="ce2">CE2</option>
+                        <option value="cm1">CM1</option>
+                        <option value="cm2">CM2</option>
+                    </select>
+                </div>
+                
+                <div class="card">
+                    <label for="periodeSelect">Période</label>
+                    <select id="periodeSelect" class="form-control" title="Sélectionnez la période">
+                        <option value="t1">Trimestre 1</option>
+                        <option value="t2">Trimestre 2</option>
+                        <option value="t3">Trimestre 3</option>
+                        <option value="s1">Semestre 1</option>
+                        <option value="s2">Semestre 2</option>
+                    </select>
+                </div>
+                
+                <div class="card">
+                    <label for="matiereSelect">Matière</label>
+                    <select id="matiereSelect" class="form-control" title="Sélectionnez la matière">
+                        <option value="francais">Français</option>
+                        <option value="mathematiques">Mathématiques</option>
+                        <option value="histoire">Histoire</option>
+                        <option value="geographie">Géographie</option>
+                        <option value="sciences">Sciences</option>
+                    </select>
+                </div>
+                
+                <div class="card">
+                    <label for="modelSelect">Modèle IA</label>
+                    <select id="modelSelect" class="form-control" title="Sélectionnez le modèle d'IA">
+                        <!-- Options dynamiques -->
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Evaluation Section -->
+            <div class="evaluation-section">
+                <div class="section-header">
+                    <h2>Évaluation des Compétences</h2>
+                </div>
+                
+                <div class="grid grid-4">
+                    <div class="card eval-card progres">
+                        <div class="eval-header">
+                            <span class="eval-icon">📈</span>
+                            <span class="eval-title">Progrès observés</span>
+                        </div>
+                        <div class="rating-grid">
+                            <button class="rating-btn excellent" data-category="progres" data-value="excellent">Excellent</button>
+                            <button class="rating-btn bien" data-category="progres" data-value="bien">Bien</button>
+                            <button class="rating-btn satisfaisant" data-category="progres" data-value="satisfaisant">Satisfaisant</button>
+                            <button class="rating-btn ameliorer" data-category="progres" data-value="ameliorer">À améliorer</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card eval-card comportement">
+                        <div class="eval-header">
+                            <span class="eval-icon">❤️</span>
+                            <span class="eval-title">Comportement</span>
+                        </div>
+                        <div class="rating-grid">
+                            <button class="rating-btn excellent" data-category="comportement" data-value="excellent">Excellent</button>
+                            <button class="rating-btn bien" data-category="comportement" data-value="tresbien">Très bien</button>
+                            <button class="rating-btn satisfaisant" data-category="comportement" data-value="correct">Correct</button>
+                            <button class="rating-btn ameliorer" data-category="comportement" data-value="surveiller">À surveiller</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card eval-card autonomie">
+                        <div class="eval-header">
+                            <span class="eval-icon">🚀</span>
+                            <span class="eval-title">Autonomie</span>
+                        </div>
+                        <div class="rating-grid">
+                            <button class="rating-btn excellent" data-category="autonomie" data-value="excellente">Excellente</button>
+                            <button class="rating-btn bien" data-category="autonomie" data-value="bonne">Bonne</button>
+                            <button class="rating-btn satisfaisant" data-category="autonomie" data-value="moyenne">Moyenne</button>
+                            <button class="rating-btn ameliorer" data-category="autonomie" data-value="insuffisante">Insuffisante</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card eval-card participation">
+                        <div class="eval-header">
+                            <span class="eval-icon">💡</span>
+                            <span class="eval-title">Participation</span>
+                        </div>
+                        <div class="rating-grid">
+                            <button class="rating-btn excellent" data-category="participation" data-value="tresactive">Très active</button>
+                            <button class="rating-btn bien" data-category="participation" data-value="active">Active</button>
+                            <button class="rating-btn satisfaisant" data-category="participation" data-value="moderee">Modérée</button>
+                            <button class="rating-btn ameliorer" data-category="participation" data-value="discrete">Discrète</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Résumé des compétences -->
+            <div id="competence-summary" class="competence-summary"></div>
+            
+            <!-- Action Buttons -->
+            <div class="actions">
+                <button class="btn btn-primary" id="generateBtn">
+                    <span>🤖</span>
+                    <span>Générer avec IA</span>
+                </button>
+                <button class="btn btn-success" id="openN8nBtn">
+                    <span>🔗</span>
+                    <span>Ouvrir n8n</span>
+                </button>
+                <button class="btn btn-info" id="testOllamaBtn">
+                    <span>🔍</span>
+                    <span>Test Ollama</span>
+                </button>
+                <button class="btn btn-secondary" id="copyBtn">
+                    <span>📋</span>
+                    <span>Copier</span>
+                </button>
+                <button class="btn btn-secondary" id="shareBtn">
+                    <span>📢</span>
+                    <span>Partager</span>
+                </button>
+                <button class="btn btn-secondary" id="resetBtn">
+                    <span>🔄</span>
+                    <span>Réinitialiser</span>
+                </button>
+                <button class="btn btn-secondary" id="exportBtn">
+                    <span>📤</span>
+                    <span>Exporter</span>
+                </button>
+                <button class="btn btn-secondary" id="importBtn">
+                    <span>📥</span>
+                    <span>Importer</span>
+                </button>
+            </div>
+            
+            <!-- Comment Section -->
+            <div class="card comment-section">
+                <div class="comment-header">
+                    <h3>Commentaire généré</h3>
+                </div>
+                <textarea id="commentaire" class="form-control" rows="6" 
+                    placeholder="Sélectionnez les évaluations puis cliquez sur 'Générer avec IA' pour créer un commentaire personnalisé..."></textarea>
+                
+                <div class="comment-actions">
+                    <button class="btn btn-primary" onclick="copyComment()">
+                        <span>📋</span>
+                        <span>Copier</span>
+                    </button>
+                    <button class="btn btn-info" onclick="shareComment()">
+                        <span>📢</span>
+                        <span>Partager</span>
+                    </button>
+                    <button class="btn btn-warning" onclick="generateVariants()">
+                        <span>🔄</span>
+                        <span>3 Variantes</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Titre du Modal</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content dynamique -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+</body>
+</html> 

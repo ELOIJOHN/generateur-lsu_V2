@@ -1,0 +1,106 @@
+{
+  "version": "2.0.0",
+  "app": {
+    "name": "Générateur LSU",
+    "description": "Application de génération de commentaires LSU avec IA",
+    "author": "John Eloi",
+    "year": 2024
+  },
+  "ollama": {
+    "baseUrl": "http://localhost:11434",
+    "model": "mistral",
+    "timeout": 30000,
+    "retryAttempts": 3,
+    "retryDelay": 1000
+  },
+  "ui": {
+    "theme": "dark",
+    "language": "fr",
+    "animations": true,
+    "notifications": true
+  },
+  "storage": {
+    "prefix": "lsu_",
+    "encryption": true,
+    "maxSize": 10485760
+  },
+  "pwa": {
+    "name": "Générateur LSU",
+    "short_name": "LSU",
+    "description": "Générateur de commentaires LSU avec IA",
+    "theme_color": "#4f46e5",
+    "background_color": "#1a1d29",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "/",
+    "icons": [
+      {
+        "src": "assets/icons/icon-72x72.png",
+        "sizes": "72x72",
+        "type": "image/png"
+      },
+      {
+        "src": "assets/icons/icon-96x96.png",
+        "sizes": "96x96",
+        "type": "image/png"
+      },
+      {
+        "src": "assets/icons/icon-128x128.png",
+        "sizes": "128x128",
+        "type": "image/png"
+      },
+      {
+        "src": "assets/icons/icon-144x144.png",
+        "sizes": "144x144",
+        "type": "image/png"
+      },
+      {
+        "src": "assets/icons/icon-152x152.png",
+        "sizes": "152x152",
+        "type": "image/png"
+      },
+      {
+        "src": "assets/icons/icon-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "assets/icons/icon-384x384.png",
+        "sizes": "384x384",
+        "type": "image/png"
+      },
+      {
+        "src": "assets/icons/icon-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  },
+  "security": {
+    "allowedOrigins": ["http://localhost:5500", "https://lsu-generator.github.io"],
+    "maxFileSize": 5242880,
+    "allowedFileTypes": [".json", ".csv"],
+    "encryptionKey": "lsu-secure-key-2024"
+  },
+  "performance": {
+    "cacheDuration": 86400,
+    "maxCacheSize": 52428800,
+    "lazyLoading": true,
+    "compression": true
+  },
+  "analytics": {
+    "enabled": true,
+    "trackErrors": true,
+    "trackPerformance": true,
+    "trackUsage": true
+  },
+  "features": {
+    "offlineMode": true,
+    "exportPDF": true,
+    "importCSV": true,
+    "customTemplates": true,
+    "history": true,
+    "favorites": true,
+    "statistics": true
+  }
+} 

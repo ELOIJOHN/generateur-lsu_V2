@@ -1,0 +1,248 @@
+{
+    "niveaux": {
+        "cp": {
+            "francais": {
+                "excellent": {
+                    "template": "{nom} a fait preuve d'une excellente maîtrise en français. {pronom} lit avec fluidité et comprend parfaitement les textes. {pronom} écrit de manière soignée et structurée.",
+                    "criteria": ["lecture", "écriture", "compréhension"]
+                },
+                "bien": {
+                    "template": "{nom} montre de bonnes compétences en français. {pronom} lit avec aisance et comprend bien les textes. {pronom} écrit de manière lisible.",
+                    "criteria": ["lecture", "écriture", "compréhension"]
+                },
+                "moyen": {
+                    "template": "{nom} progresse en français. {pronom} commence à lire avec plus d'aisance. {pronom} doit encore travailler sur l'écriture.",
+                    "criteria": ["lecture", "écriture", "compréhension"]
+                },
+                "insuffisant": {
+                    "template": "{nom} rencontre des difficultés en français. {pronom} doit s'entraîner davantage à la lecture et à l'écriture.",
+                    "criteria": ["lecture", "écriture", "compréhension"]
+                }
+            },
+            "mathematiques": {
+                "excellent": {
+                    "template": "{nom} excelle en mathématiques. {pronom} maîtrise parfaitement les nombres jusqu'à 100 et les opérations simples.",
+                    "criteria": ["nombres", "calcul", "géométrie"]
+                },
+                "bien": {
+                    "template": "{nom} montre de bonnes compétences en mathématiques. {pronom} comprend bien les nombres et les opérations.",
+                    "criteria": ["nombres", "calcul", "géométrie"]
+                },
+                "moyen": {
+                    "template": "{nom} progresse en mathématiques. {pronom} commence à maîtriser les nombres et les opérations simples.",
+                    "criteria": ["nombres", "calcul", "géométrie"]
+                },
+                "insuffisant": {
+                    "template": "{nom} rencontre des difficultés en mathématiques. {pronom} doit s'entraîner davantage sur les nombres et les opérations.",
+                    "criteria": ["nombres", "calcul", "géométrie"]
+                }
+            }
+        },
+        "ce1": {
+            "francais": {
+                "excellent": {
+                    "template": "{nom} a fait preuve d'une excellente maîtrise en français. {pronom} lit avec fluidité et comprend parfaitement les textes. {pronom} écrit de manière soignée et structurée.",
+                    "criteria": ["lecture", "écriture", "grammaire", "orthographe"]
+                },
+                "bien": {
+                    "template": "{nom} montre de bonnes compétences en français. {pronom} lit avec aisance et comprend bien les textes. {pronom} écrit de manière lisible.",
+                    "criteria": ["lecture", "écriture", "grammaire", "orthographe"]
+                },
+                "moyen": {
+                    "template": "{nom} progresse en français. {pronom} commence à lire avec plus d'aisance. {pronom} doit encore travailler sur l'écriture.",
+                    "criteria": ["lecture", "écriture", "grammaire", "orthographe"]
+                },
+                "insuffisant": {
+                    "template": "{nom} rencontre des difficultés en français. {pronom} doit s'entraîner davantage à la lecture et à l'écriture.",
+                    "criteria": ["lecture", "écriture", "grammaire", "orthographe"]
+                }
+            },
+            "mathematiques": {
+                "excellent": {
+                    "template": "{nom} excelle en mathématiques. {pronom} maîtrise parfaitement les nombres jusqu'à 1000 et les opérations.",
+                    "criteria": ["nombres", "calcul", "géométrie", "mesures"]
+                },
+                "bien": {
+                    "template": "{nom} montre de bonnes compétences en mathématiques. {pronom} comprend bien les nombres et les opérations.",
+                    "criteria": ["nombres", "calcul", "géométrie", "mesures"]
+                },
+                "moyen": {
+                    "template": "{nom} progresse en mathématiques. {pronom} commence à maîtriser les nombres et les opérations.",
+                    "criteria": ["nombres", "calcul", "géométrie", "mesures"]
+                },
+                "insuffisant": {
+                    "template": "{nom} rencontre des difficultés en mathématiques. {pronom} doit s'entraîner davantage sur les nombres et les opérations.",
+                    "criteria": ["nombres", "calcul", "géométrie", "mesures"]
+                }
+            }
+        },
+        "ce2": {
+            "francais": {
+                "excellent": {
+                    "template": "{nom} a fait preuve d'une excellente maîtrise en français. {pronom} lit avec fluidité et comprend parfaitement les textes. {pronom} écrit de manière soignée et structurée.",
+                    "criteria": ["lecture", "écriture", "grammaire", "orthographe", "conjugaison"]
+                },
+                "bien": {
+                    "template": "{nom} montre de bonnes compétences en français. {pronom} lit avec aisance et comprend bien les textes. {pronom} écrit de manière lisible.",
+                    "criteria": ["lecture", "écriture", "grammaire", "orthographe", "conjugaison"]
+                },
+                "moyen": {
+                    "template": "{nom} progresse en français. {pronom} commence à lire avec plus d'aisance. {pronom} doit encore travailler sur l'écriture.",
+                    "criteria": ["lecture", "écriture", "grammaire", "orthographe", "conjugaison"]
+                },
+                "insuffisant": {
+                    "template": "{nom} rencontre des difficultés en français. {pronom} doit s'entraîner davantage à la lecture et à l'écriture.",
+                    "criteria": ["lecture", "écriture", "grammaire", "orthographe", "conjugaison"]
+                }
+            },
+            "mathematiques": {
+                "excellent": {
+                    "template": "{nom} excelle en mathématiques. {pronom} maîtrise parfaitement les nombres et les opérations complexes.",
+                    "criteria": ["nombres", "calcul", "géométrie", "mesures", "problèmes"]
+                },
+                "bien": {
+                    "template": "{nom} montre de bonnes compétences en mathématiques. {pronom} comprend bien les nombres et les opérations.",
+                    "criteria": ["nombres", "calcul", "géométrie", "mesures", "problèmes"]
+                },
+                "moyen": {
+                    "template": "{nom} progresse en mathématiques. {pronom} commence à maîtriser les nombres et les opérations.",
+                    "criteria": ["nombres", "calcul", "géométrie", "mesures", "problèmes"]
+                },
+                "insuffisant": {
+                    "template": "{nom} rencontre des difficultés en mathématiques. {pronom} doit s'entraîner davantage sur les nombres et les opérations.",
+                    "criteria": ["nombres", "calcul", "géométrie", "mesures", "problèmes"]
+                }
+            }
+        },
+        "cm1": {
+            "francais": {
+                "excellent": {
+                    "template": "{nom} a fait preuve d'une excellente maîtrise en français. {pronom} lit avec fluidité et comprend parfaitement les textes. {pronom} écrit de manière soignée et structurée.",
+                    "criteria": ["lecture", "écriture", "grammaire", "orthographe", "conjugaison", "vocabulaire"]
+                },
+                "bien": {
+                    "template": "{nom} montre de bonnes compétences en français. {pronom} lit avec aisance et comprend bien les textes. {pronom} écrit de manière lisible.",
+                    "criteria": ["lecture", "écriture", "grammaire", "orthographe", "conjugaison", "vocabulaire"]
+                },
+                "moyen": {
+                    "template": "{nom} progresse en français. {pronom} commence à lire avec plus d'aisance. {pronom} doit encore travailler sur l'écriture.",
+                    "criteria": ["lecture", "écriture", "grammaire", "orthographe", "conjugaison", "vocabulaire"]
+                },
+                "insuffisant": {
+                    "template": "{nom} rencontre des difficultés en français. {pronom} doit s'entraîner davantage à la lecture et à l'écriture.",
+                    "criteria": ["lecture", "écriture", "grammaire", "orthographe", "conjugaison", "vocabulaire"]
+                }
+            },
+            "mathematiques": {
+                "excellent": {
+                    "template": "{nom} excelle en mathématiques. {pronom} maîtrise parfaitement les nombres et les opérations complexes.",
+                    "criteria": ["nombres", "calcul", "géométrie", "mesures", "problèmes", "fractions"]
+                },
+                "bien": {
+                    "template": "{nom} montre de bonnes compétences en mathématiques. {pronom} comprend bien les nombres et les opérations.",
+                    "criteria": ["nombres", "calcul", "géométrie", "mesures", "problèmes", "fractions"]
+                },
+                "moyen": {
+                    "template": "{nom} progresse en mathématiques. {pronom} commence à maîtriser les nombres et les opérations.",
+                    "criteria": ["nombres", "calcul", "géométrie", "mesures", "problèmes", "fractions"]
+                },
+                "insuffisant": {
+                    "template": "{nom} rencontre des difficultés en mathématiques. {pronom} doit s'entraîner davantage sur les nombres et les opérations.",
+                    "criteria": ["nombres", "calcul", "géométrie", "mesures", "problèmes", "fractions"]
+                }
+            }
+        },
+        "cm2": {
+            "francais": {
+                "excellent": {
+                    "template": "{nom} a fait preuve d'une excellente maîtrise en français. {pronom} lit avec fluidité et comprend parfaitement les textes. {pronom} écrit de manière soignée et structurée.",
+                    "criteria": ["lecture", "écriture", "grammaire", "orthographe", "conjugaison", "vocabulaire", "expression"]
+                },
+                "bien": {
+                    "template": "{nom} montre de bonnes compétences en français. {pronom} lit avec aisance et comprend bien les textes. {pronom} écrit de manière lisible.",
+                    "criteria": ["lecture", "écriture", "grammaire", "orthographe", "conjugaison", "vocabulaire", "expression"]
+                },
+                "moyen": {
+                    "template": "{nom} progresse en français. {pronom} commence à lire avec plus d'aisance. {pronom} doit encore travailler sur l'écriture.",
+                    "criteria": ["lecture", "écriture", "grammaire", "orthographe", "conjugaison", "vocabulaire", "expression"]
+                },
+                "insuffisant": {
+                    "template": "{nom} rencontre des difficultés en français. {pronom} doit s'entraîner davantage à la lecture et à l'écriture.",
+                    "criteria": ["lecture", "écriture", "grammaire", "orthographe", "conjugaison", "vocabulaire", "expression"]
+                }
+            },
+            "mathematiques": {
+                "excellent": {
+                    "template": "{nom} excelle en mathématiques. {pronom} maîtrise parfaitement les nombres et les opérations complexes.",
+                    "criteria": ["nombres", "calcul", "géométrie", "mesures", "problèmes", "fractions", "décimaux"]
+                },
+                "bien": {
+                    "template": "{nom} montre de bonnes compétences en mathématiques. {pronom} comprend bien les nombres et les opérations.",
+                    "criteria": ["nombres", "calcul", "géométrie", "mesures", "problèmes", "fractions", "décimaux"]
+                },
+                "moyen": {
+                    "template": "{nom} progresse en mathématiques. {pronom} commence à maîtriser les nombres et les opérations.",
+                    "criteria": ["nombres", "calcul", "géométrie", "mesures", "problèmes", "fractions", "décimaux"]
+                },
+                "insuffisant": {
+                    "template": "{nom} rencontre des difficultés en mathématiques. {pronom} doit s'entraîner davantage sur les nombres et les opérations.",
+                    "criteria": ["nombres", "calcul", "géométrie", "mesures", "problèmes", "fractions", "décimaux"]
+                }
+            }
+        }
+    },
+    "comportement": {
+        "excellent": {
+            "template": "{nom} fait preuve d'un excellent comportement. {pronom} est respectueux(se) et attentif(ve) en classe.",
+            "criteria": ["respect", "attention", "participation"]
+        },
+        "bien": {
+            "template": "{nom} a un bon comportement. {pronom} est généralement respectueux(se) et attentif(ve).",
+            "criteria": ["respect", "attention", "participation"]
+        },
+        "moyen": {
+            "template": "{nom} doit faire des efforts sur son comportement. {pronom} doit être plus attentif(ve) et respectueux(se).",
+            "criteria": ["respect", "attention", "participation"]
+        },
+        "insuffisant": {
+            "template": "{nom} a un comportement difficile. {pronom} doit faire des efforts importants sur le respect et l'attention.",
+            "criteria": ["respect", "attention", "participation"]
+        }
+    },
+    "autonomie": {
+        "excellent": {
+            "template": "{nom} est très autonome. {pronom} travaille seul(e) avec efficacité et sait organiser son travail.",
+            "criteria": ["organisation", "initiative", "persévérance"]
+        },
+        "bien": {
+            "template": "{nom} est autonome. {pronom} travaille généralement seul(e) et organise bien son travail.",
+            "criteria": ["organisation", "initiative", "persévérance"]
+        },
+        "moyen": {
+            "template": "{nom} doit progresser en autonomie. {pronom} a besoin d'aide pour organiser son travail.",
+            "criteria": ["organisation", "initiative", "persévérance"]
+        },
+        "insuffisant": {
+            "template": "{nom} manque d'autonomie. {pronom} a besoin d'un accompagnement constant.",
+            "criteria": ["organisation", "initiative", "persévérance"]
+        }
+    },
+    "participation": {
+        "excellent": {
+            "template": "{nom} participe activement en classe. {pronom} s'implique dans les discussions et les activités.",
+            "criteria": ["oral", "échanges", "activités"]
+        },
+        "bien": {
+            "template": "{nom} participe bien en classe. {pronom} s'implique dans les activités.",
+            "criteria": ["oral", "échanges", "activités"]
+        },
+        "moyen": {
+            "template": "{nom} doit participer davantage en classe. {pronom} doit s'impliquer plus dans les activités.",
+            "criteria": ["oral", "échanges", "activités"]
+        },
+        "insuffisant": {
+            "template": "{nom} participe peu en classe. {pronom} doit s'impliquer davantage dans les activités.",
+            "criteria": ["oral", "échanges", "activités"]
+        }
+    }
+} 
